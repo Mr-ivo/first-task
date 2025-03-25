@@ -2,7 +2,7 @@ import { Outlet, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
 export default function Layout() {
-  const { logout, user } = useAuth();
+  const { logout, currentUser } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -47,7 +47,7 @@ export default function Layout() {
               </div>
             </div>
             <div className="flex items-center">
-              <span className="text-gray-700 mr-4">Welcome, {user?.firstName}</span>
+              <span className="text-gray-700 mr-4">Welcome, {currentUser?.firstName}</span>
               <button
                 onClick={handleLogout}
                 className="bg-red-500 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-600"
