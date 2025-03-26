@@ -1,4 +1,3 @@
-// User type
 export interface User {
   id: number;
   username: string;
@@ -24,7 +23,6 @@ export interface Product {
   images: string[];
 }
 
-// Post type
 export interface Post {
   id: number;
   title: string;
@@ -39,18 +37,24 @@ export interface Comment {
   id: number;
   body: string;
   postId: number;
+  email: string;
   user: {
     id: number;
     username: string;
   };
+  rating?: number; 
 }
 
-// API Response types
+
 export interface PostsResponse {
   posts: Post[];
   total: number;
   skip: number;
   limit: number;
+}
+
+export interface CartItem extends Product {
+  quantity: number;
 }
 
 export interface ProductsResponse {
@@ -59,6 +63,7 @@ export interface ProductsResponse {
   skip: number;
   limit: number;
 }
+
 
 export interface CommentsResponse {
   comments: Comment[];
