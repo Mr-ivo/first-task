@@ -33,15 +33,16 @@ export default function PaymentPage() {
     country: '',
   });
 
+  const [order, setOrder] = useState<Order | null>(null);
+
   const handlePayment = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsProcessing(true);
-
-    // Simulate payment processing
+  
     await new Promise(resolve => setTimeout(resolve, 2000));
-
-    const order: Order = {
-      id: Math.random().toString(36).substr(2, 9),
+  
+    const newOrder: Order = {
+      id: Math.random().toString(36).substring(2, 9),
       items: cart,
       total,
       discount,
@@ -51,14 +52,25 @@ export default function PaymentPage() {
       paymentMethod: 'Credit Card',
       shippingAddress,
     };
-
+  
+    setOrder(newOrder); 
     setIsSuccess(true);
     clearCart();
     
     setTimeout(() => {
-      navigate('/');
+      navigate('/', { state: { order: newOrder } }); 
     }, 3000);
   };
+  
+  if (isSuccess && order) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-white flex items-center justify-center px-4">
+        <p className="opacity-90 mt-1">
+          Your order #{order.id.toUpperCase()} has been confirmed
+        </p>
+      </div>
+    );
+  }
 
   if (isSuccess) {
     return (
