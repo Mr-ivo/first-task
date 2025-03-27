@@ -2,9 +2,10 @@ import { useQueries } from '@tanstack/react-query';
 import { productsApi, postsApi, commentsApi } from '../services/api';
 import { Product, ProductsResponse, CommentsResponse, CartItem } from '../types';
 import { Link } from 'react-router-dom';
-import { useState} from 'react';
+import { useState } from 'react';
 
 export default function Dashboard() {
+  // const navigate = useNavigate();
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -222,7 +223,7 @@ export default function Dashboard() {
             <div className="flex items-center">
               <div className="p-3 rounded-full bg-yellow-100 text-yellow-600">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2v-3a2 2 0 012-2v-3a2 2 0 012-2z" />
                 </svg>
               </div>
               <div className="ml-4">
@@ -396,9 +397,9 @@ export default function Dashboard() {
 
       {isCartOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-hidden">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-hidden m-4">
             <div className="p-6 border-b border-gray-200 flex justify-between items-center">
-              <h2 className="text-xl font-semibold">Your Shopping Cart</h2>
+              <h2 className="text-xl font-semibold">Shopping Cart</h2>
               <button
                 onClick={() => setIsCartOpen(false)}
                 className="text-gray-500 hover:text-gray-700"
@@ -408,65 +409,39 @@ export default function Dashboard() {
                 </svg>
               </button>
             </div>
-            <div className="p-6 overflow-y-auto max-h-[60vh]">
+            <div className="p-6 overflow-y-auto flex-1">
               {cart.length === 0 ? (
-                <div className="text-center py-12">
-                  <svg
-                    className="mx-auto h-12 w-12 text-gray-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                    />
+                <div className="text-center py-8">
+                  <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                   </svg>
-                  <h3 className="mt-2 text-lg font-medium text-gray-900">Your cart is empty</h3>
-                  <p className="mt-1 text-gray-500">
-                    Start shopping to add items to your cart.
-                  </p>
-                  <div className="mt-6">
-                    <button
-                      onClick={() => setIsCartOpen(false)}
-                      className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                    >
-                      Continue Shopping
-                    </button>
-                  </div>
+                  <p className="mt-4 text-gray-500">Your cart is empty</p>
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {cart.map(item => (
-                    <div key={item.id} className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
-                      <img src={item.thumbnail} alt={item.title} className="w-16 h-16 object-cover rounded-lg" />
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-medium text-gray-900 truncate">{item.title}</h3>
-                        <p className="text-indigo-600 font-medium">${(item.price * item.quantity).toFixed(2)}</p>
-                        {item.discountPercentage > 0 && (
-                          <p className="text-xs text-gray-500">
-                            You save ${(item.price * item.discountPercentage / 100 * item.quantity).toFixed(2)}
-                          </p>
-                        )}
+                  {cart.map((item) => (
+                    <div key={item.id} className="flex items-center space-x-4">
+                      <img src={item.thumbnail} alt={item.title} className="w-16 h-16 object-cover rounded" />
+                      <div className="flex-1">
+                        <h3 className="text-sm font-medium text-gray-900">{item.title}</h3>
+                        <p className="text-sm text-gray-500">${item.price.toFixed(2)}</p>
                       </div>
                       <div className="flex items-center space-x-2">
                         <button
-                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                          className="p-1 rounded-full hover:bg-gray-200"
+                          onClick={() => updateQuantity(item.id, Math.max(0, item.quantity - 1))}
+                          className="text-gray-500 hover:text-gray-700"
                         >
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 12H4" />
                           </svg>
                         </button>
-                        <span className="w-8 text-center">{item.quantity}</span>
+                        <span className="text-gray-600 w-8 text-center">{item.quantity}</span>
                         <button
                           onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                          className="p-1 rounded-full hover:bg-gray-200"
+                          className="text-gray-500 hover:text-gray-700"
                         >
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                           </svg>
                         </button>
                       </div>
@@ -484,28 +459,39 @@ export default function Dashboard() {
               )}
             </div>
             {cart.length > 0 && (
-              <div className="p-6 border-t border-gray-200 bg-gray-50">
-                <div className="space-y-4">
-                  <div className="flex justify-between">
-                    <span className="font-medium">Subtotal:</span>
-                    <span className="font-medium">${cartTotal.toFixed(2)}</span>
+              <div className="p-6 border-t border-gray-200">
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-500">Subtotal</span>
+                    <span className="text-gray-900">${cartTotal.toFixed(2)}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="font-medium">Discounts:</span>
-                    <span className="text-green-600 font-medium">
-                      -${totalDiscount.toFixed(2)}
-                    </span>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-500">Discount</span>
+                    <span className="text-indigo-600">-${totalDiscount.toFixed(2)}</span>
                   </div>
-                  <div className="flex justify-between border-t border-gray-200 pt-2">
-                    <span className="font-semibold">Total:</span>
-                    <span className="text-xl font-bold text-indigo-600">
-                      ${(cartTotal - totalDiscount).toFixed(2)}
-                    </span>
+                  <div className="flex justify-between text-base font-medium">
+                    <span className="text-gray-900">Total</span>
+                    <span className="text-gray-900">${(cartTotal - totalDiscount).toFixed(2)}</span>
                   </div>
+                  <a href="#/payment">
+                  <button
+                    onClick={() => {
+                      setIsCartOpen(false);
+                      // navigate('/payment', { 
+                      //   state: { 
+                      //     cart,
+                      //     total: cartTotal,
+                      //     discount: totalDiscount,
+                      //     clearCart: () => setCart([])
+                      //   }
+                      // });
+                    }}
+                    className="mt-4 w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  >
+                    Proceed to Checkout
+                  </button>
+                  </a>
                 </div>
-                <button className="mt-6 w-full bg-indigo-600 text-white py-3 px-4 rounded-lg hover:bg-indigo-700 transition-colors font-medium">
-                  Proceed to Checkout
-                </button>
               </div>
             )}
           </div>

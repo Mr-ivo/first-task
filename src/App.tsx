@@ -6,6 +6,7 @@ import Products from './components/Products';
 import Posts from './components/Posts';
 import Comments from './components/Comments';
 import Layout from './components/Layout';
+import Payment from './components/Payment';
 
 
 
@@ -29,6 +30,7 @@ function AppRoutes() {
         <Route path="products" element={<Products />} />
         <Route path="posts" element={<Posts />} />
         <Route path="comments" element={<Comments />} />
+        <Route path="payment" element={<Payment />} />
       </Route>
       <Route path="*" element={<Navigate to="/login" />} />
     </Routes>

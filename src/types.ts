@@ -45,6 +45,32 @@ export interface Comment {
   rating?: number; 
 }
 
+// Order type
+export interface Order {
+  id: string;
+  items: CartItem[];
+  total: number;
+  discount: number;
+  finalTotal: number;
+  status: 'pending' | 'completed' | 'failed';
+  createdAt: string;
+  paymentMethod: string;
+  shippingAddress: {
+    street: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    country: string;
+  };
+}
+
+// Payment type
+export interface Payment {
+  cardNumber: string;
+  cardHolder: string;
+  expiryDate: string;
+  cvv: string;
+}
 
 export interface PostsResponse {
   posts: Post[];
@@ -63,7 +89,6 @@ export interface ProductsResponse {
   skip: number;
   limit: number;
 }
-
 
 export interface CommentsResponse {
   comments: Comment[];
